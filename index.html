@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MedCompanion — UX/UI Case Study | SOEN357</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#F8F7F4;--surface:#FFFFFF;--ink:#0F172A;--ink2:#475569;--accent:#1D4ED8;--accent-lt:#EFF6FF;--accent-mid:#BFDBFE;--teal:#0F766E;--teal-lt:#F0FDFA;--amber:#B45309;--red:#B91C1C;--green:#15803D;--border:#E2E8F0;--radius:10px;--shadow:0 1px 8px rgba(15,23,42,.07);--mono:'JetBrains Mono',monospace;--serif:'DM Serif Display',Georgia,serif;--sans:'Sora',system-ui,sans-serif}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.75}
+nav{position:sticky;top:0;z-index:200;background:rgba(248,247,244,.93);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem}
+.nav-logo{font-family:var(--serif);font-size:1.1rem;color:var(--accent);text-decoration:none}
+.nav-links{display:flex;gap:1.4rem;list-style:none}
+.nav-links a{font-size:.72rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);text-decoration:none;transition:color .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--accent)}
+.hero{background:var(--ink);color:#fff;padding:7rem 2rem 5rem;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 72% 48%,rgba(29,78,216,.28) 0%,transparent 62%),radial-gradient(ellipse at 18% 80%,rgba(15,118,110,.18) 0%,transparent 52%);pointer-events:none}
+.hero-inner{max-width:880px;margin:0 auto;position:relative;z-index:1}
+.hero-tag{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--mono);font-size:.7rem;letter-spacing:.09em;background:rgba(29,78,216,.25);color:#93C5FD;padding:.28rem .8rem;border-radius:100px;margin-bottom:1.4rem;border:1px solid rgba(147,197,253,.25)}
+.hero h1{font-family:var(--serif);font-size:clamp(2.8rem,7vw,5rem);line-height:1.0;letter-spacing:-.02em;margin-bottom:.9rem}
+.hero h1 em{font-style:italic;color:#93C5FD}
+.hero-sub{font-size:1rem;font-weight:300;color:#CBD5E1;max-width:520px;margin-bottom:2.2rem;line-height:1.65}
+.hero-meta{display:flex;gap:2rem;flex-wrap:wrap}
+.meta-item{font-family:var(--mono);font-size:.72rem;color:#64748B}
+.meta-item span{color:#E2E8F0;display:block;font-size:.82rem;margin-top:.15rem}
+.container{max-width:840px;margin:0 auto;padding:0 2rem}
+.section{padding:4.5rem 0;border-bottom:1px solid var(--border);scroll-margin-top:62px}
+.section:last-child{border-bottom:none}
+.section-label{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:.55rem;margin-bottom:.7rem}
+.section-label::before{content:'';display:block;width:20px;height:1px;background:var(--accent)}
+h2.section-title{font-family:var(--serif);font-size:clamp(1.6rem,3.5vw,2.5rem);line-height:1.15;letter-spacing:-.02em;margin-bottom:1.4rem}
+h3.sub-title{font-size:1rem;font-weight:600;color:var(--ink);margin:1.8rem 0 .7rem}
+.prose p{margin-bottom:1rem;color:var(--ink2);font-size:.93rem}
+.prose p:last-child{margin-bottom:0}
+.prose strong{color:var(--ink);font-weight:600}
+.note-box{background:var(--accent-lt);border-left:3px solid var(--accent);border-radius:0 var(--radius) var(--radius) 0;padding:.9rem 1.1rem;margin:1.4rem 0;font-size:.85rem;color:#1E40AF;font-style:italic;white-space:pre-line}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:.9rem;margin:1.8rem 0}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem;box-shadow:var(--shadow)}
+.stat-num{font-family:var(--serif);font-size:2.2rem;line-height:1;color:var(--accent);margin-bottom:.35rem}
+.stat-desc{font-size:.78rem;color:var(--ink2);line-height:1.4}
+.stat-src{font-family:var(--mono);font-size:.64rem;color:#94A3B8;margin-top:.5rem}
+.find-list{list-style:none;display:flex;flex-direction:column;gap:.7rem;margin:1.4rem 0}
+.find-list li{display:flex;gap:.9rem;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:.9rem 1.1rem;font-size:.88rem}
+.find-list .icon{font-size:1rem;flex-shrink:0;margin-top:.05rem}
+.find-cite{font-family:var(--mono);font-size:.66rem;color:var(--accent);display:block;margin-top:.2rem}
+.persona-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.3rem;margin:1.8rem 0}
+@media(max-width:660px){.persona-grid{grid-template-columns:1fr}}
+.persona-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}
+.persona-header{background:var(--ink);color:#fff;padding:1.3rem}
+.persona-header.teal{background:var(--teal)}
+.persona-avatar{width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:.7rem}
+.persona-name{font-family:var(--serif);font-size:1.3rem;margin-bottom:.15rem}
+.persona-role{font-size:.78rem;opacity:.65;margin-bottom:.7rem}
+.persona-quote{font-size:.82rem;font-style:italic;background:rgba(255,255,255,.1);border-radius:5px;padding:.55rem .75rem;line-height:1.5}
+.persona-body{padding:1.1rem}
+.persona-row{display:flex;gap:.55rem;padding:.55rem 0;border-bottom:1px solid var(--border);font-size:.83rem}
+.persona-row:last-child{border-bottom:none;padding-bottom:0}
+.persona-label{font-weight:600;color:var(--ink);min-width:76px;flex-shrink:0}
+.persona-val{color:var(--ink2)}
+.cite-tag{font-family:var(--mono);font-size:.64rem;color:var(--accent)}
+.journey-wrap{margin:1.5rem 0;overflow-x:auto}
+.journey-title{font-family:var(--serif);font-size:1.1rem;color:var(--ink);margin-bottom:.9rem;padding-bottom:.4rem;border-bottom:2px solid var(--accent)}
+table.jtbl{width:100%;border-collapse:collapse;font-size:.79rem;min-width:680px}
+table.jtbl th{background:var(--ink);color:#fff;padding:.65rem .75rem;text-align:left;font-weight:600}
+table.jtbl td{padding:.65rem .75rem;border-bottom:1px solid var(--border);vertical-align:top;color:var(--ink2)}
+table.jtbl tr:nth-child(even) td{background:#FAFAFA}
+table.jtbl td:first-child{font-weight:600;color:var(--ink);white-space:nowrap}
+.pain{color:var(--red);font-size:.74rem;margin-top:.18rem}
+.em-badge{display:inline-block;padding:.12rem .45rem;border-radius:100px;font-size:.72rem}
+.em-pos{background:#F0FDF4;color:var(--green);border:1px solid #BBF7D0}
+.em-neu{background:#FFFBEB;color:var(--amber);border:1px solid #FDE68A}
+.em-neg{background:#FEF2F2;color:var(--red);border:1px solid #FECACA}
+.screens-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1.3rem;margin:1.8rem 0}
+.screen-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}
+.phone-shell{background:#0F172A;height:270px;display:flex;flex-direction:column;padding:.9rem;position:relative;overflow:hidden}
+.phone-shell::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:72px;height:3px;background:rgba(255,255,255,.12);border-radius:0 0 3px 3px}
+.ph-status{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.55rem;color:rgba(255,255,255,.35);margin-bottom:.7rem}
+.ph-body{flex:1;overflow:hidden}
+.ph-nav{display:flex;justify-content:space-around;border-top:1px solid rgba(255,255,255,.08);padding-top:.55rem;margin-top:auto}
+.ph-ni{display:flex;flex-direction:column;align-items:center;gap:.15rem;font-size:.5rem;color:rgba(255,255,255,.35)}
+.ph-ni.on{color:#60A5FA}
+.ph-icon{font-size:.85rem}
+.s-info{padding:.9rem}
+.s-name{font-weight:600;font-size:.88rem;margin-bottom:.3rem}
+.s-desc{font-size:.77rem;color:var(--ink2);line-height:1.5}
+.s-tag{display:inline-block;margin-top:.4rem;background:var(--accent-lt);color:var(--accent);border-radius:100px;padding:.1rem .5rem;font-family:var(--mono);font-size:.62rem}
+.ph-greeting{font-size:.6rem;color:rgba(255,255,255,.45);margin-bottom:.15rem}
+.ph-uname{font-family:var(--serif);font-size:.95rem;color:#fff;margin-bottom:.4rem}
+.ph-streak{background:rgba(29,78,216,.35);border:1px solid rgba(96,165,250,.25);border-radius:5px;padding:.25rem .55rem;font-size:.55rem;color:#93C5FD;margin-bottom:.6rem;display:flex;align-items:center;gap:.25rem}
+.ph-med{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:5px;padding:.35rem .55rem;display:flex;align-items:center;justify-content:space-between;margin-bottom:.3rem}
+.ph-med-n{font-size:.58rem;color:#fff;font-weight:500}
+.ph-med-t{font-size:.5rem;color:rgba(255,255,255,.4)}
+.btn-take{background:#1D4ED8;color:#fff;font-size:.5rem;padding:.18rem .45rem;border-radius:3px;font-weight:600}
+.btn-done{background:#15803D;color:#fff;font-size:.5rem;padding:.18rem .45rem;border-radius:3px;font-weight:600}
+.ph-appt{background:rgba(15,118,110,.2);border:1px solid rgba(15,118,110,.3);border-radius:5px;padding:.3rem .55rem;margin-top:.4rem;font-size:.55rem;color:#5EEAD4}
+.add-hd{font-family:var(--serif);font-size:.82rem;color:#fff;margin-bottom:.55rem}
+.add-step{display:flex;gap:.35rem;align-items:center;margin-bottom:.35rem}
+.add-dot{width:13px;height:13px;border-radius:50%;background:#1D4ED8;display:flex;align-items:center;justify-content:center;font-size:.46rem;color:#fff;flex-shrink:0}
+.add-dot.done{background:#15803D}
+.add-dot.cur{background:#1D4ED8;box-shadow:0 0 0 2px rgba(29,78,216,.3)}
+.add-label{font-size:.56rem;color:rgba(255,255,255,.45)}
+.add-label.cur{color:#fff;font-weight:500}
+.add-inp{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:3px;padding:.25rem .45rem;font-size:.56rem;color:#fff;width:100%;margin-bottom:.25rem}
+.rem-center{display:flex;flex-direction:column;align-items:center;text-align:center;height:100%;justify-content:center}
+.rem-pill{font-size:2.2rem;margin-bottom:.4rem}
+.rem-name{font-family:var(--serif);font-size:.88rem;color:#fff;margin-bottom:.15rem}
+.rem-dose{font-size:.56rem;color:rgba(255,255,255,.45);margin-bottom:.8rem}
+.rem-time{font-family:var(--mono);font-size:1.3rem;color:#60A5FA;margin-bottom:.8rem;font-weight:500}
+.rem-btn{width:100%;padding:.38rem;border-radius:5px;font-size:.6rem;font-weight:700;margin-bottom:.25rem;letter-spacing:.04em}
+.rem-btn.p{background:#15803D;color:#fff}
+.rem-btn.s{background:rgba(255,255,255,.08);color:rgba(255,255,255,.55)}
+.rem-btn.k{background:transparent;color:rgba(255,255,255,.28);font-size:.54rem}
+.appt-hd{font-family:var(--serif);font-size:.82rem;color:#fff;margin-bottom:.55rem}
+.appt-row{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:5px;padding:.4rem .55rem;margin-bottom:.35rem;display:flex;align-items:center;gap:.4rem}
+.appt-ico{font-size:.9rem}
+.appt-n{font-size:.58rem;color:#fff;font-weight:500}
+.appt-t{font-size:.5rem;color:rgba(255,255,255,.4)}
+.appt-join{margin-left:auto;background:#0F766E;color:#fff;font-size:.46rem;padding:.12rem .38rem;border-radius:100px}
+.appt-add{background:#1D4ED8;color:#fff;border-radius:5px;padding:.35rem;font-size:.6rem;font-weight:600;text-align:center;margin-top:.35rem}
+.rep-hd{font-family:var(--serif);font-size:.82rem;color:#fff;margin-bottom:.55rem}
+.heatmap{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:.45rem}
+.hm-d{aspect-ratio:1;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:.42rem;color:rgba(255,255,255,.35)}
+.hm-d.g{background:rgba(21,128,61,.65);color:#fff}
+.hm-d.y{background:rgba(180,83,9,.45)}
+.hm-d.r{background:rgba(185,28,28,.45)}
+.hm-d.e{background:rgba(255,255,255,.04)}
+.rep-lbl{font-size:.54rem;color:rgba(255,255,255,.35);margin-bottom:.28rem}
+.bars{display:flex;align-items:flex-end;gap:2px;height:36px;margin-bottom:.18rem}
+.bar{flex:1;border-radius:2px 2px 0 0;background:#1D4ED8;opacity:.65}
+.rep-ins{background:rgba(21,128,61,.15);border:1px solid rgba(21,128,61,.28);border-radius:4px;padding:.28rem .45rem;font-size:.55rem;color:#86EFAC}
+.proto-banner{background:linear-gradient(135deg,var(--accent) 0%,#1E3A8A 100%);border-radius:12px;padding:1.8rem;color:#fff;margin:1.8rem 0}
+.proto-banner h3{font-family:var(--serif);font-size:1.35rem;margin-bottom:.4rem}
+.proto-banner p{font-size:.86rem;opacity:.8;line-height:1.55;max-width:500px}
+.proto-embed{margin:1.8rem 0;border-radius:12px;overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow)}
+.proto-embed iframe{display:block;width:100%;height:650px;border:none}
+.flow-list{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}
+.flow-item{display:flex;gap:.9rem;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:.75rem .9rem;font-size:.86rem}
+.flow-letter{background:var(--accent);color:#fff;width:20px;height:20px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.68rem;font-weight:600;flex-shrink:0}
+.flow-item strong{color:var(--ink)}
+.flow-item span{color:var(--ink2)}
+table.ux-tbl{width:100%;border-collapse:collapse;font-size:.82rem;min-width:560px}
+table.ux-tbl th{background:var(--ink);color:#fff;padding:.65rem .9rem;text-align:left;font-weight:600}
+table.ux-tbl td{padding:.65rem .9rem;border-bottom:1px solid var(--border);color:var(--ink2);vertical-align:top}
+table.ux-tbl tr:nth-child(even) td{background:#FAFAFA}
+table.ux-tbl td:first-child{font-weight:600;color:var(--ink);font-family:var(--mono);font-size:.74rem}
+.refl-grid{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin:1.4rem 0}
+@media(max-width:580px){.refl-grid{grid-template-columns:1fr}}
+.refl-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem}
+.refl-card h4{font-weight:600;font-size:.88rem;margin-bottom:.45rem;color:var(--ink)}
+.refl-card p{font-size:.84rem;color:var(--ink2);line-height:1.65}
+.ref-list{list-style:none;display:flex;flex-direction:column;gap:.55rem}
+.ref-list li{font-size:.8rem;color:var(--ink2);display:flex;gap:.75rem;padding:.65rem .9rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius)}
+.ref-num{font-family:var(--mono);font-size:.68rem;color:var(--accent);min-width:26px;flex-shrink:0;padding-top:.04rem}
+.ref-list a{color:var(--accent);text-decoration:none}
+.ref-list a:hover{text-decoration:underline}
+footer{background:var(--ink);color:rgba(255,255,255,.5);text-align:center;padding:2.8rem 2rem;font-size:.8rem}
+footer strong{color:rgba(255,255,255,.8)}
+.fade-in{opacity:0;transform:translateY(14px);transition:opacity .5s,transform .5s}
+.fade-in.visible{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#">MedCompanion</a>
+  <ul class="nav-links">
+    <li><a href="#research">Research</a></li>
+    <li><a href="#personas">Personas</a></li>
+    <li><a href="#journey">Journey</a></li>
+    <li><a href="#wireframes">Wireframes</a></li>
+    <li><a href="#prototype">Prototype</a></li>
+    <li><a href="#testing">Testing</a></li>
+    <li><a href="#reflection">Reflection</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">SOEN357 Mini Project &mdash; Winter 2026</div>
+    <h1>Med<em>Companion</em></h1>
+    <p class="hero-sub">UX/UI case study &mdash; designing a mobile health super app for Canadians managing chronic conditions, medications, and healthcare appointments.</p>
+    <p style="font-family:var(--mono);font-size:.78rem;color:#64748B;margin-top:1rem;">Elias Haddad &mdash; 40196175</p>
+  </div>
+</section>
+
+<section class="section" id="intro">
+  <div class="container">
+    <h2 class="section-title">Problem Statement</h2>
+    <div class="prose">
+      <p>The MedCompanion application was created for Canadians who live with chronic diseases such as hypertension and type 2 diabetes. This application allows users to manage their drug-seeking behaviors and communicate with their primary care providers from within one piece of software.</p>
+      <p>Non-adherence to medications is a huge problem in the Canadian health care sector. According to Think Research Canada (2023) [1], as many as 20-30% of prescriptions written in Canada are never filled and 26% of individuals who do fill their prescriptions report taking them differently than prescribed. A CMAJ article [2] has reported that about 5% of Canadians aged 12 and over report cost-related non-adherence to their prescribed medications, and people with one or more long-term health problems are at least 3.4 times more likely to experience medication non-adherence than people without chronic health problems. Approximately 23% of Canadians have trouble remembering to take their medications on time [1].</p>
+      <p>This UX report provides a summary of how we approached the development of our product, including our user research, the development of user personas, mapping user journeys through the application, creating wireframes, developing a click-through prototype, and creating a usability testing plan.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="research">
+  <div class="container">
+    <h2 class="section-title">User Research</h2>
+    <div class="prose">
+      <p>For research purposes, three types of secondary data were utilized to define the user population for the target application: (1) Academic Research Studies: PubMed, JMIR, and MDPI all have a large repository of peer-reviewed academic research (2016-2024) related to barriers that prevent patients from taking their medications, how well the mHealth apps are used by patients, and how to manage chronic illnesses in Canada; (2) Canadian National Surveys: Statistics Canada, Canadian Community Health Survey (CCHS), Think Research Canada, and HEC Montreal partnered to conduct a cross-sectional study of mHealth use by 4,109 Canadians; and (3) Current UX Studies: Two current examples are a Czech Republic pilot study (2024) that evaluated a medication adherence app for patients with Chronic Obstructive Pulmonary Disease (COPD) and congestive heart failure using ISO 14915 usability specifications [4] and a survey conducted by the Canadian Journal of Hospital Pharmacy in 2023 to determine how older adults were utilizing technology at Saint John Regional Hospital in New Brunswick [5].</p>
+    </div>
+
+    <h3 class="sub-title">2.2.1 Medication Non-Adherence in Canada</h3>
+    <div class="prose">
+      <p>A Canadian Family Physician study of over 91,000 prescriptions from Manitoba primary care patients found that non-adherence rates for antihypertensives reached 30.3% &mdash; among the highest of any drug class studied [6]. This is clinically significant given that hypertension is one of the most common chronic conditions managed in Canadian primary care. A Statistics Canada analysis of the Canadian Community Health Survey found that Canadians with chronic conditions who spent 5% or more of household income on out-of-pocket drug costs were at substantially elevated risk of cost-related non-adherence [7].</p>
+      <p>A systematic review of 26 Canadian studies (n&nbsp;=&nbsp;483,065 participants) published in <em>Systematic Reviews</em> found cost-related non-adherence rates ranging from 5.1% to 10.2% of the general population, with predictors including low income, lack of drug insurance, and presence of chronic illness [8]. Forgetfulness and routine disruption are also well-documented barriers: a qualitative systematic review of 16 studies and 403 patients found that medication is most commonly missed when patients are away from their regular routine [9].</p>
+    </div>
+    <h3 class="sub-title">2.2.2 Technology Adoption Among Canadian Older Adults</h3>
+    <div class="prose">
+      <p>An HEC Montr&eacute;al / Canada Health Infoway national cross-sectional survey conducted on 4,109 Canadian residents shows that 47.4% of older adults aged 65 and over said they use a smartphone, but only 39% have shared mHealth data with their health care providers, highlighting the large gap between access to technology and how it can be effectively used for health purposes [3]. Another national study of 2,000 Canadian Seniors found that 85.2% own a computer, 82.6% use the Internet regularly, however, there was still a low utilization of eHealth applications for appointment scheduling, access to patient portals, and connecting to health care providers [10]. A survey published by The Canadian Journal of Hospital Pharmacy looking at older adults aged 60+ who were surveyed through Saint John Regional Hospital located in New Brunswick determined the following: older adults are very interested in using medication reminders and appointment management apps, however, their main barriers to adoption are perceived complexity, privacy issues, and lack of confidence [5].</p>
+    </div>
+
+    <h3 class="sub-title">2.2.3 mHealth Usability for Older Adults</h3>
+    <div class="prose">
+      <p>A systematic review published in JMIR mHealth found that excessive navigation depth, small text size, absence of visual aids, and too many simultaneous choices are the most common usability problems in health-related applications. The main recommendation was to keep all essential elements within two taps of each other and to provide visual illustrations of text or pictograms [11].</p>
+      <p>In a newly conducted pilot study from 2024, researchers in the Czech Republic evaluated a "real world" medication management application using ISO 14915 coding standards on patients with chronic diseases taking medication. Three significant findings from this study are relevant in designing a MedCompanion: patients preferred a colour-coded interface over a monochrome interface; pictograms helped reduce the number of times the patient had to read the sequence of events associated with taking their medications; and using confirmation dialogues after patients completed a dose entry helped reduce accidental entries when taking medications [4].</p>
+    </div>
+
+    <h3 class="sub-title">2.2.4 Polypharmacy</h3>
+    <div class="prose">
+      <p>Polypharmacy (the concurrent use of five or more medications) is becoming more commonplace for Canadians over the age of 65 as many of them suffer from multiple chronic illnesses. In a study of a large British Columbia administrative health database (n=3,906,377 adults), researchers discovered that individuals' adherence to the use of their prescribed medication was disrupted by external stressors (e.g., employment or relationship issues) and routine changes (e.g., vacation or medical appointments), which underscore the need for the development of adaptive reminder systems [12].</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="personas">
+  <div class="container">
+    <h2 class="section-title">User Personas</h2>
+    <div class="prose">
+      <p>Two personas were developed from the research findings above. They represent the two primary user archetypes most frequently described in the Canadian mHealth and medication adherence literature.</p>
+    </div>
+    <div class="persona-grid">
+      <div class="persona-card fade-in">
+        <div class="persona-header">
+          <div class="persona-avatar">&#x1F469;&#x200D;&#x1F9B3;</div>
+          <div class="persona-name">Margaret Chen</div>
+          <div class="persona-role">68 &mdash; Retired Schoolteacher, Montr&eacute;al, QC</div>
+          <div class="persona-quote">"I just want to make sure I'm taking the right pill at the right time."</div>
+        </div>
+        <div class="persona-body">
+          <div class="persona-row"><span class="persona-label">Condition</span><span class="persona-val">Hypertension + Type 2 Diabetes &mdash; 6 daily medications</span></div>
+          <div class="persona-row"><span class="persona-label">Goals</span><span class="persona-val">Maintain independence; keep blood pressure and blood sugar controlled; avoid accidental double-dosing</span></div>
+          <div class="persona-row"><span class="persona-label">Pain Points</span><span class="persona-val">Forgets doses when visiting family or travelling; confused by medication names; frustrated by small text; concerned about privacy on health apps</span></div>
+          <div class="persona-row"><span class="persona-label">Tech Level</span><span class="persona-val">Low&ndash;moderate. Owns a smartphone; comfortable with calls and texting; no prior health app experience</span></div>
+          <div class="persona-row"><span class="persona-label">Research</span><span class="persona-val cite-tag">Sproul et al. (2023) [5]; JMIR e43186 (2023) [11]; Think Research Canada [1]; Singer et al. CFP (2022) [6]</span></div>
+        </div>
+      </div>
+      <div class="persona-card fade-in">
+        <div class="persona-header teal">
+          <div class="persona-avatar">&#x1F468;&#x1F3FE;&#x200D;&#x1F4BC;</div>
+          <div class="persona-name">David Okafor</div>
+          <div class="persona-role">44 &mdash; IT Project Manager, frequent domestic travel (Toronto-based)</div>
+          <div class="persona-quote">"I manage complex projects all day &mdash; I shouldn't be forgetting two pills."</div>
+        </div>
+        <div class="persona-body">
+          <div class="persona-row"><span class="persona-label">Condition</span><span class="persona-val">Hypertension &mdash; newly diagnosed, 2 medications (Lisinopril, Amlodipine)</span></div>
+          <div class="persona-row"><span class="persona-label">Goals</span><span class="persona-val">Keep hypertension controlled without disrupting work schedule; track BP trends over time; manage appointments efficiently</span></div>
+          <div class="persona-row"><span class="persona-label">Pain Points</span><span class="persona-val">Forgets evening dose when working late or crossing time zones; wants data-rich feedback but not excessive complexity; reluctant to identify as a patient</span></div>
+          <div class="persona-row"><span class="persona-label">Tech Level</span><span class="persona-val">High. Heavy smartphone and laptop user; quick to adopt new tools but demands reliability and efficiency</span></div>
+          <div class="persona-row"><span class="persona-label">Research</span><span class="persona-val cite-tag">Liu et al. (2024) [9]; Jaana et al., JMIR mHealth (2020) [3]; CMAJ (2024) [2]</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="journey">
+  <div class="container">
+    <h2 class="section-title">User Journey Maps</h2>
+
+    <div class="journey-wrap fade-in">
+      <div class="journey-title">Margaret Chen &mdash; First-Time Setup</div>
+      <div class="prose" style="margin-bottom:1rem"><p>Scenario: Margaret's physician has added a new antihypertensive to her regimen. Her daughter helps her download MedCompanion and she sets it up for the first time.</p></div>
+      <table class="jtbl">
+        <thead><tr><th>Stage</th><th>User Actions</th><th>Emotions</th><th>Touchpoints</th><th>Pain Points</th></tr></thead>
+        <tbody>
+          <tr><td>1. Download</td><td>Opens App Store with daughter's help; installs app</td><td><span class="em-badge em-neg">Nervous</span></td><td>App Store listing</td><td class="pain">&#9888; Medical jargon in store description nearly discourages her</td></tr>
+          <tr><td>2. Onboarding</td><td>Creates profile; selects large text; enters basic health info</td><td><span class="em-badge em-neu">Cautious</span></td><td>Welcome wizard, text-size selector</td><td class="pain">&#9888; Too many input fields on a single screen</td></tr>
+          <tr><td>3. Add Medication</td><td>Photographs pill bottle; app autocompletes name and dose; sets 8am/8pm reminders</td><td><span class="em-badge em-neu">Focused</span></td><td>Camera scan, medication form, reminder picker</td><td class="pain">&#9888; Uncertain whether the dose field was entered correctly</td></tr>
+          <tr><td>4. Daily Reminder</td><td>Receives notification; sees pill photo; taps Taken</td><td><span class="em-badge em-pos">Relieved</span></td><td>Push notification, home screen</td><td class="pain">&#9888; Phone was on silent &mdash; missed the first reminder</td></tr>
+          <tr><td>5. Appointment</td><td>Books cardiology follow-up from Appointments tab</td><td><span class="em-badge em-pos">Confident</span></td><td>Appointments tab, calendar</td><td class="pain">&#9888; Calendar sync option is unclear</td></tr>
+          <tr><td>6. Messaging</td><td>Sends in-app message about a side effect she noticed</td><td><span class="em-badge em-pos">Reassured</span></td><td>In-app secure messaging</td><td class="pain">&#9888; No indication of expected response time &mdash; creates anxiety</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="journey-wrap fade-in" style="margin-top:2rem">
+      <div class="journey-title">David Okafor &mdash; Managing Medications While Travelling</div>
+      <div class="prose" style="margin-bottom:1rem"><p>Scenario: David is on a business trip in Vancouver (three time zones from Toronto) and uses the app to manage his medications and confirm his upcoming appointment.</p></div>
+      <table class="jtbl">
+        <thead><tr><th>Stage</th><th>User Actions</th><th>Emotions</th><th>Touchpoints</th><th>Pain Points</th></tr></thead>
+        <tbody>
+          <tr><td>1. Download</td><td>Downloads immediately after cardiologist appointment</td><td><span class="em-badge em-neu">Skeptical</span></td><td>Physician recommendation, App Store</td><td class="pain">&#9888; Will abandon the app if onboarding exceeds three minutes</td></tr>
+          <tr><td>2. Setup</td><td>Adds medications via scan; connects calendar; enables smart reminders</td><td><span class="em-badge em-pos">Satisfied</span></td><td>Medication scan, calendar integration</td><td class="pain">&#9888; Annoyed by any manual entry; expects scan-to-import</td></tr>
+          <tr><td>3. Travel Mode</td><td>App detects time-zone change; prompts confirmation of adjusted reminder</td><td><span class="em-badge em-pos">Relieved</span></td><td>Geolocation trigger, notification</td><td class="pain">&#9888; If dismissed, reminder defaults to home time zone</td></tr>
+          <tr><td>4. Adherence</td><td>Opens Reports; notes missed dose on Tuesday; observes pattern</td><td><span class="em-badge em-neu">Analytical</span></td><td>Dashboard, adherence chart</td><td class="pain">&#9888; Wants adherence data correlated with BP readings</td></tr>
+          <tr><td>5. Appointment</td><td>Receives 24-hour reminder; requests telehealth option</td><td><span class="em-badge em-pos">Efficient</span></td><td>Appointment reminder, telehealth request</td><td class="pain">&#9888; No confirmation that the telehealth request reached the clinic</td></tr>
+          <tr><td>6. Messaging</td><td>Sends BP screenshot and pre-visit note via secure chat</td><td><span class="em-badge em-pos">Proactive</span></td><td>In-app messaging, file attachment</td><td class="pain">&#9888; No read-receipt equivalent</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="wireframes">
+  <div class="container">
+    <h2 class="section-title">Sketches &amp; Wireframes</h2>
+    <h3 class="sub-title">5.1 Information Architecture</h3>
+    <div class="prose">
+      <p>MedCompanion uses a flat five-tab navigation structure: Home, Medications, Appointments, Messages, and Reports. This architecture keeps every core feature accessible within two taps, directly addressing the JMIR 2023 systematic review's recommendation to minimise navigation depth for older adults [11]. Initial paper sketches explored a deeper hierarchical structure, but early iteration showed that placing critical actions more than two levels deep increased cognitive load and error rates.</p>
+    </div>
+    <div style="overflow-x:auto;margin:1rem 0">
+      <table class="ux-tbl">
+        <thead><tr><th>Tab</th><th>Content</th></tr></thead>
+        <tbody>
+          <tr><td>Home</td><td>Today's medication list with TAKE buttons; adherence streak counter; next appointment card</td></tr>
+          <tr><td>Medications</td><td>Full medication list; add/edit medications; pill photo library; refill alert threshold</td></tr>
+          <tr><td>Appointments</td><td>Upcoming visits (in-person and telehealth); add/reschedule; 24h + 1h reminders; one-tap telehealth join</td></tr>
+          <tr><td>Messages</td><td>Secure messaging with care team; file attachments; delivery status</td></tr>
+          <tr><td>Reports</td><td>Heatmap calendar (green / yellow / red); per-medication adherence bar charts; one-tap PDF export</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3 class="sub-title">5.2 Key Screen Descriptions</h3>
+    <div class="screens-grid">
+
+      <div class="screen-card fade-in">
+        <div class="phone-shell">
+          <div class="ph-status"><span>9:41</span><span>87%</span></div>
+          <div class="ph-body">
+            <div class="ph-greeting">Good morning,</div>
+            <div class="ph-uname">Margaret &#x1F44B;</div>
+            <div class="ph-streak">&#x1F525; 12-day streak</div>
+            <div style="font-size:.5rem;color:rgba(255,255,255,.35);margin-bottom:.25rem">TODAY</div>
+            <div class="ph-med"><div><div class="ph-med-n">&#x1F48A; Lisinopril 10mg</div><div class="ph-med-t">8:00 AM</div></div><div class="btn-done">&#x2713; TAKEN</div></div>
+            <div class="ph-med"><div><div class="ph-med-n">&#x1F48A; Metformin 500mg</div><div class="ph-med-t">8:00 PM</div></div><div class="btn-take">TAKE</div></div>
+            <div class="ph-appt">&#x1F4C5; Dr. Chen &mdash; Thu Feb 27 &middot; 10:00 AM</div>
+          </div>
+          <div class="ph-nav">
+            <div class="ph-ni on"><span class="ph-icon">&#x1F3E0;</span>Home</div>
+            <div class="ph-ni"><span class="ph-icon">&#x1F48A;</span>Meds</div>
+            <div class="ph-ni"><span class="ph-icon">&#x1F4C5;</span>Appts</div>
+            <div class="ph-ni"><span class="ph-icon">&#x1F4AC;</span>Chat</div>
+            <div class="ph-ni"><span class="ph-icon">&#x1F4CA;</span>Reports</div>
+          </div>
+        </div>
+        <div class="s-info">
+          <div class="s-name">Home Dashboard</div>
+          <div class="s-desc">Today's medications with large TAKE buttons; adherence streak; next appointment card. All content above the fold.</div>
+          <span class="s-tag">TAKE reachable in 1 tap</span>
+        </div>
+      </div>
+
+      <div class="screen-card fade-in">
+        <div class="phone-shell">
+          <div class="ph-status"><span>9:45</span><span>87%</span></div>
+          <div class="ph-body">
+            <div class="add-hd">Add Medication</div>
+            <div class="add-step"><div class="add-dot done">&#x2713;</div><span class="add-label">Scan pill bottle</span></div>
+            <div class="add-step"><div class="add-dot cur">2</div><span class="add-label cur">Confirm details</span></div>
+            <div class="add-step"><div class="add-dot">3</div><span class="add-label">Set reminder</span></div>
+            <div class="add-step"><div class="add-dot">4</div><span class="add-label">Choose pill photo</span></div>
+            <div style="margin-top:.5rem">
+              <div class="add-inp">Medication: Lisinopril 10mg &#x2713;</div>
+              <div class="add-inp">Dose: 10 mg</div>
+              <div class="add-inp">Frequency: Twice daily</div>
+            </div>
+          </div>
+          <div class="ph-nav">
+            <div class="ph-ni"><span class="ph-icon">&#x1F3E0;</span>Home</div>
+            <div class="ph-ni on"><span class="ph-icon">&#x1F48A;</span>Meds</div>
+            <div class="ph-ni"><span class="ph-icon">&#x1F4C5;</span>Appts</div>
+            <div class="ph-ni"><span class="ph-icon">&#x1F4AC;</span>Chat</div>
+            <div class="ph-ni"><span class="ph-icon">&#x1F4CA;</span>Reports</div>
+          </div>
+        </div>
+        <div class="s-info">
+          <div class="s-name">Add Medication</div>
+          <div class="s-desc">Camera OCR scan autocompletes medication name and dose. Step-by-step flow: one action per screen reduces typing burden.</div>
+          <span class="s-tag">Camera scan &rarr; OCR autofill</span>
+        </div>
+      </div>
+
+      <div class="screen-card fade-in">
+        <div class="phone-shell">
+          <div class="ph-status"><span>8:00</span><span>72%</span></div>
+          <div class="ph-body" style="display:flex;align-items:center;justify-content:center;height:100%">
+            <div class="rem-center">
+              <div class="rem-pill">&#x1F48A;</div>
+              <div class="rem-name">Lisinopril</div>
+              <div class="rem-dose">10 mg &middot; Morning dose</div>
+              <div class="rem-time">8:00 AM</div>
+              <div class="rem-btn p">&#x2713; TAKEN</div>
+              <div class="rem-btn s">&#x23F0; Remind me in 30 min</div>
+              <div class="rem-btn k">Skip this dose</div>
+            </div>
+          </div>
+          <div class="ph-nav">
+            <div class="ph-ni"><span class="ph-icon">&#x1F3E0;</span>Home</div>
+            <div class="ph-ni on"><span class="ph-icon">&#x1F48A;</span>Meds</div>
+            <div class="ph-ni"><span class="ph-icon">&#x1F4C5;</span>Appts</div>
+            <div class="ph-ni"><span class="ph-icon">&#x1F4AC;</span>Chat</div>
+            <div class="ph-ni"><span class="ph-icon">&#x1F4CA;</span>Reports</div>
+          </div>
+        </div>
+        <div class="s-info">
+          <div class="s-name">Medication Reminder</div>
+          <div class="s-desc">Full-screen with pill photo. Three actions: TAKEN / Snooze / Skip. Green confirmation screen after TAKEN prevents double-dosing [4].</div>
+          <span class="s-tag">Confirmation dialog &rarr; prevents errors</span>
+        </div>
+      </div>
+
+      <div class="screen-card fade-in">
+        <div class="phone-shell">
+          <div class="ph-status"><span>10:30</span><span>61%</span></div>
+          <div class="ph-body">
+            <div class="appt-hd">Appointments</div>
+            <div class="appt-row"><span class="appt-ico">&#x1FA7A;</span><div><div class="appt-n">Dr. Chen &mdash; Cardiology</div><div class="appt-t">Thu Feb 27 &middot; 10:00 AM &middot; In-person</div></div></div>
+            <div class="appt-row"><span class="appt-ico">&#x1F4BB;</span><div><div class="appt-n">Dr. Patel &mdash; GP</div><div class="appt-t">Mon Mar 3 &middot; 2:30 PM &middot; Telehealth</div></div><div class="appt-join">Join</div></div>
+            <div class="appt-add">+ Add Appointment</div>
+          </div>
+          <div class="ph-nav">
+            <div class="ph-ni"><span class="ph-icon">&#x1F3E0;</span>Home</div>
+            <div class="ph-ni"><span class="ph-icon">&#x1F48A;</span>Meds</div>
+            <div class="ph-ni on"><span class="ph-icon">&#x1F4C5;</span>Appts</div>
+            <div class="ph-ni"><span class="ph-icon">&#x1F4AC;</span>Chat</div>
+            <div class="ph-ni"><span class="ph-icon">&#x1F4CA;</span>Reports</div>
+          </div>
+        </div>
+        <div class="s-info">
+          <div class="s-name">Appointments</div>
+          <div class="s-desc">In-person and telehealth visits unified. Telehealth Join button appears 15 min before visit. 24h + 1h reminders by default.</div>
+          <span class="s-tag">In-person + telehealth unified</span>
+        </div>
+      </div>
+
+      <div class="screen-card fade-in">
+        <div class="phone-shell">
+          <div class="ph-status"><span>11:15</span><span>55%</span></div>
+          <div class="ph-body">
+            <div class="rep-hd">My Progress</div>
+            <div class="rep-lbl">February &mdash; Lisinopril</div>
+            <div class="heatmap">
+              <div class="hm-d e"></div>
+              <div class="hm-d g">1</div><div class="hm-d g">2</div><div class="hm-d g">3</div><div class="hm-d g">4</div><div class="hm-d g">5</div><div class="hm-d g">6</div>
+              <div class="hm-d g">7</div><div class="hm-d g">8</div><div class="hm-d y">9</div><div class="hm-d g">10</div><div class="hm-d g">11</div><div class="hm-d g">12</div><div class="hm-d g">13</div>
+              <div class="hm-d r">14</div><div class="hm-d g">15</div><div class="hm-d g">16</div><div class="hm-d g">17</div><div class="hm-d g">18</div><div class="hm-d g">19</div><div class="hm-d g">20</div>
+            </div>
+            <div class="rep-lbl">30-day trend</div>
+            <div class="bars">
+              <div class="bar" style="height:80%"></div><div class="bar" style="height:95%"></div><div class="bar" style="height:75%"></div><div class="bar" style="height:90%"></div>
+              <div class="bar" style="height:55%;background:#B45309"></div><div class="bar" style="height:100%"></div><div class="bar" style="height:88%"></div><div class="bar" style="height:92%"></div>
+            </div>
+            <div class="rep-ins">&#x2713; 92% adherence this month</div>
+          </div>
+          <div class="ph-nav">
+            <div class="ph-ni"><span class="ph-icon">&#x1F3E0;</span>Home</div>
+            <div class="ph-ni"><span class="ph-icon">&#x1F48A;</span>Meds</div>
+            <div class="ph-ni"><span class="ph-icon">&#x1F4C5;</span>Appts</div>
+            <div class="ph-ni"><span class="ph-icon">&#x1F4AC;</span>Chat</div>
+            <div class="ph-ni on"><span class="ph-icon">&#x1F4CA;</span>Reports</div>
+          </div>
+        </div>
+        <div class="s-info">
+          <div class="s-name">Reports / My Progress</div>
+          <div class="s-desc">Heatmap calendar (green/yellow/red) + per-medication bar chart. One-tap PDF export for physician visits.</div>
+          <span class="s-tag">PDF export for appointments</span>
+        </div>
+      </div>
+
+    </div>
+
+    <h3 class="sub-title">Home Dashboard</h3>
+    <div class="prose">
+      <p>The home screen displays today's medications with large TAKE / TAKEN buttons and an adherence streak counter. The next upcoming appointment appears below the medication list. All content is above the fold to avoid scrolling. Design rationale: a 2024 Czech usability study found that the first interaction with a health app is critical to adoption &mdash; the interface must be immediately comprehensible and uncluttered [4].</p>
+    </div>
+
+    <h3 class="sub-title">Add Medication</h3>
+    <div class="prose">
+      <p>Users can photograph a pill bottle; OCR extracts the medication name and dose. The flow is divided into four steps (scan, confirm details, set reminder, choose pill photo), one action per screen. This reduces typing burden &mdash; a documented usability barrier for older adults &mdash; and allows users to visually identify their medications by photo, addressing a noted concern among patients managing multiple drugs [11].</p>
+    </div>
+
+    <h3 class="sub-title">Medication Reminder</h3>
+    <div class="prose">
+      <p>Full-screen reminder showing the pill photo, medication name, and dose. Three buttons: TAKEN, Remind me in 30 minutes, and Skip. A green confirmation screen with an undo button will appear for three seconds after selecting TAKEN. The confirmation pattern was developed using the recommendations from the 2024 Czech pilot study, which confirmed that the confirmation pattern can prevent accidental marking of doses in real patient trials [4].</p>
+    </div>
+
+    <h3 class="sub-title">Appointments</h3>
+    <div class="prose">
+      <p>Listing of appointments. All appointments show future appointments, and the type (in-person/telehealth), date, time and provider. A one-tap Join button appears 15 minutes before a telehealth visit. Appointment reminders at 24 hours and 1 hour are enabled by default.</p>
+    </div>
+
+    <h3 class="sub-title">Reports</h3>
+    <div class="prose">
+      <p>A heatmap calendar displays daily adherence for the current month; green indicates full adherence, yellow indicates a delayed dose, and red indicates a missed dose. A monthly bar chart shows per-medication adherence percentages. A one-tap PDF export allows users to share adherence data with their physician at their next visit.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="prototype">
+  <div class="container">
+    <h2 class="section-title">Prototype</h2>
+    <div class="prose">
+      <p>The creation of a low-to-medium fidelity prototype in Figma involved clickable navigation for demonstration purposes without any functional use. This prototype encompasses five distinct user flows as follows: FLOWS A - onboarding, adding medication via scanning the bottle, setting a reminder and returning back to the home dashboard; FLOWS B - navigating to home screen, receiving notification from system, clicking on TAKEN, seeing confirmation screen that it's green (taken) and then returning back to home screen after clicking back key; FLOWS C/D - adjustments based on current time zone (Travel Mode for David), adjusting reminder/time to allow for time zone change and returning the adjusted schedule each time an adjustment is made; FLOWS E - sending a new message (Doctor) via text message tab, sending message, receiving a confirmation it has been delivered.</p>
+      <p>All visual design decisions are based on user research, including the application of a minimum of 44&times;44 pt touch targets on all interactive elements according to WCAG 2.1, and JMIR 2023's recommendation [11]; all text within the app has a WCAG AA color contrast (4.5:1); confirmation dialogs will be presented for all actions that cannot be undone, based on recommendations from the Czech usability study [4].</p>
+    </div>
+
+    <!-- ── Self-contained Interactive Prototype ── -->
+    <div id="proto-root" style="margin:2rem 0;background:#1a1f2e;border-radius:16px;padding:2rem;display:flex;gap:2.5rem;align-items:flex-start;flex-wrap:wrap;">
+
+      <!-- Flow selector sidebar -->
+      <div style="flex:1;min-width:200px;">
+        <div style="font-family:var(--mono);font-size:.65rem;letter-spacing:.1em;color:#64748B;text-transform:uppercase;margin-bottom:.9rem;">Select Flow</div>
+        <div id="flow-btns" style="display:flex;flex-direction:column;gap:.5rem;">
+          <button class="proto-flow-btn active" onclick="startFlow('A',this)"><span class="fbl">A</span> First-time Setup</button>
+          <button class="proto-flow-btn" onclick="startFlow('B',this)"><span class="fbl">B</span> Daily Confirmation</button>
+          <button class="proto-flow-btn" onclick="startFlow('C',this)"><span class="fbl">C</span> Travel Mode</button>
+          <button class="proto-flow-btn" onclick="startFlow('D',this)"><span class="fbl">D</span> Book Appointment</button>
+          <button class="proto-flow-btn" onclick="startFlow('E',this)"><span class="fbl">E</span> Doctor Message</button>
+        </div>
+        <div style="margin-top:1.4rem;font-size:.76rem;color:#475569;line-height:1.6;" id="flow-desc"></div>
+        <!-- breadcrumb -->
+        <div style="margin-top:1.2rem;">
+          <div style="font-family:var(--mono);font-size:.62rem;color:#64748B;margin-bottom:.4rem;">Progress</div>
+          <div id="proto-crumb" style="display:flex;gap:4px;flex-wrap:wrap;"></div>
+        </div>
+        <!-- nav hint -->
+        <div style="margin-top:1.4rem;display:flex;gap:.5rem;">
+          <button onclick="protoBack()" id="btn-back" style="flex:1;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);color:#94A3B8;border-radius:7px;padding:.45rem;font-size:.75rem;cursor:pointer;font-family:var(--sans);">← Back</button>
+          <button onclick="protoNext()" id="btn-next" style="flex:1;background:#1D4ED8;border:none;color:#fff;border-radius:7px;padding:.45rem;font-size:.75rem;cursor:pointer;font-family:var(--sans);">Next →</button>
+        </div>
+        <button onclick="protoReset()" style="margin-top:.5rem;width:100%;background:transparent;border:1px solid rgba(255,255,255,.08);color:#64748B;border-radius:7px;padding:.4rem;font-size:.72rem;cursor:pointer;font-family:var(--sans);">↺ Restart</button>
+      </div>
+
+      <!-- Phone shell -->
+      <div style="flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:.7rem;">
+        <div id="pdevice" style="width:260px;height:520px;background:#0F172A;border-radius:36px;border:6px solid #1e293b;box-shadow:0 0 0 1px #334155,0 30px 60px rgba(0,0,0,.6);position:relative;overflow:hidden;display:flex;flex-direction:column;">
+          <!-- notch -->
+          <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:80px;height:22px;background:#0F172A;border-radius:0 0 14px 14px;z-index:10;display:flex;align-items:center;justify-content:center;">
+            <div style="width:8px;height:8px;background:#1e293b;border-radius:50%;margin-right:4px;"></div>
+            <div style="width:30px;height:5px;background:#1e293b;border-radius:100px;"></div>
+          </div>
+          <!-- status bar -->
+          <div style="display:flex;justify-content:space-between;padding:.7rem .9rem .1rem;font-family:var(--mono);font-size:.5rem;color:rgba(255,255,255,.35);margin-top:10px;">
+            <span id="ps-time">9:41</span><span>●●●● 87%</span>
+          </div>
+          <!-- screen area -->
+          <div id="proto-screen" style="flex:1;overflow:hidden;position:relative;"></div>
+          <!-- bottom bar -->
+          <div id="proto-nav" style="display:flex;justify-content:space-around;border-top:1px solid rgba(255,255,255,.07);padding:.5rem 0 .4rem;background:#0F172A;"></div>
+        </div>
+        <div style="font-family:var(--mono);font-size:.62rem;color:#475569;text-align:center;" id="screen-lbl">Tap elements or use Next →</div>
+      </div>
+    </div>
+
+    <style>
+    .proto-flow-btn{width:100%;text-align:left;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:#94A3B8;border-radius:8px;padding:.55rem .75rem;font-size:.78rem;cursor:pointer;font-family:var(--sans);display:flex;align-items:center;gap:.6rem;transition:all .18s}
+    .proto-flow-btn:hover{background:rgba(29,78,216,.2);border-color:rgba(29,78,216,.4);color:#93C5FD}
+    .proto-flow-btn.active{background:rgba(29,78,216,.25);border-color:#3B82F6;color:#93C5FD}
+    .fbl{background:#1D4ED8;color:#fff;width:18px;height:18px;border-radius:4px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;flex-shrink:0}
+    .ps{position:absolute;inset:0;display:flex;flex-direction:column;padding:.7rem .75rem;transition:opacity .25s,transform .25s;opacity:0;transform:translateX(30px);pointer-events:none}
+    .ps.active{opacity:1;transform:none;pointer-events:all}
+    .ps.out{opacity:0;transform:translateX(-30px)}
+    .psh{font-family:'DM Serif Display',Georgia,serif;font-size:.95rem;color:#fff;margin-bottom:.5rem}
+    .psub{font-size:.55rem;color:rgba(255,255,255,.4);margin-bottom:.6rem}
+    .prow{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:7px;padding:.5rem .65rem;margin-bottom:.35rem;cursor:pointer;transition:background .15s}
+    .prow:hover{background:rgba(255,255,255,.1)}
+    .prow-label{font-size:.6rem;color:#fff;font-weight:500}
+    .prow-sub{font-size:.5rem;color:rgba(255,255,255,.38);margin-top:.08rem}
+    .ptab{display:flex;flex-direction:column;align-items:center;gap:.12rem;font-size:.48rem;color:rgba(255,255,255,.35);padding:.1rem .3rem;cursor:pointer;transition:color .15s;flex:1}
+    .ptab.on{color:#60A5FA}
+    .ptab-ico{font-size:.85rem}
+    .pbtn{border-radius:7px;padding:.5rem;font-size:.6rem;font-weight:700;margin-bottom:.28rem;text-align:center;cursor:pointer;letter-spacing:.04em;transition:transform .1s,filter .1s}
+    .pbtn:hover{filter:brightness(1.15)}
+    .pbtn:active{transform:scale(.97)}
+    .pbtn-g{background:#15803D;color:#fff}
+    .pbtn-b{background:#1D4ED8;color:#fff}
+    .pbtn-s{background:rgba(255,255,255,.08);color:rgba(255,255,255,.5)}
+    .pbtn-k{background:transparent;color:rgba(255,255,255,.25);font-size:.54rem}
+    .pinp{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:5px;padding:.32rem .5rem;font-size:.56rem;color:#fff;width:100%;margin-bottom:.28rem;font-family:var(--sans)}
+    .pstep{display:flex;gap:.35rem;align-items:center;margin-bottom:.32rem}
+    .pdot{width:14px;height:14px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.46rem;color:#fff;flex-shrink:0;font-weight:700}
+    .pdot-done{background:#15803D}
+    .pdot-cur{background:#1D4ED8;box-shadow:0 0 0 2px rgba(29,78,216,.35)}
+    .pdot-todo{background:rgba(255,255,255,.12)}
+    .plbl{font-size:.55rem;color:rgba(255,255,255,.4)}
+    .plbl-cur{color:#fff;font-weight:500}
+    .crumb{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.12);transition:background .2s}
+    .crumb.done{background:#15803D}
+    .crumb.cur{background:#1D4ED8}
+    .success-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;padding:1rem}
+    </style>
+
+    <script>
+    // ── Prototype Engine ──
+    var FLOWS = {
+      A: {
+        desc: 'Margaret opens the app for the first time, scans her pill bottle, sets a reminder, and reaches the home dashboard.',
+        nav: ['🏠','💊','📅','💬','📊'],
+        activeTab: [1,1,1,1,0],
+        screens: [
+          { id:'a1', label:'Welcome', tab:null,
+            html: function(){return '<div class="ps active" id="s-a1"><div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;padding:1rem"><div style="font-size:2.8rem;margin-bottom:.5rem">💊</div><div class="psh">MedCompanion</div><div style="font-size:.6rem;color:rgba(255,255,255,.45);margin-bottom:1.2rem;line-height:1.5">Your personal health companion<br/>for managing medications &amp; appointments.</div><div class="pbtn pbtn-b" onclick="protoNext()" style="width:100%">Get Started</div><div class="pbtn-k" style="text-align:center;font-size:.52rem;margin-top:.2rem;cursor:pointer" onclick="protoNext()">Already have an account? Sign in</div></div></div>';} },
+          { id:'a2', label:'Onboarding', tab:null,
+            html: function(){return '<div class="ps active" id="s-a2" style="padding:.8rem"><div class="psh">Let\'s set up your profile</div><div class="psub">Step 1 of 3</div><div class="pstep"><div class="pdot pdot-done">✓</div><span class="plbl">Your name</span></div><div class="pstep"><div class="pdot pdot-cur">2</div><span class="plbl plbl-cur">Health conditions</span></div><div class="pstep"><div class="pdot pdot-todo" style="background:rgba(255,255,255,.12)"></div><span class="plbl">Pharmacy &amp; doctor</span></div><div style="margin-top:.7rem"><div class="pinp">Margaret Tremblay</div><div style="font-size:.52rem;color:rgba(255,255,255,.4);margin-bottom:.25rem">Select conditions</div><div class="prow" onclick="this.style.background=\'rgba(29,78,216,.3)\';this.querySelector(\'span\').textContent=\'✓ \'"><span></span><span class="prow-label">🫀 Hypertension</span></div><div class="prow" onclick="this.style.background=\'rgba(29,78,216,.3)\'"><span class="prow-label">🩸 Type 2 Diabetes</span></div><div class="pbtn pbtn-b" style="margin-top:.6rem" onclick="protoNext()">Continue →</div></div></div>';} },
+          { id:'a3', label:'Scan Bottle', tab:1,
+            html: function(){return '<div class="ps active" id="s-a3" style="padding:.8rem"><div class="psh">Add Medication</div><div class="pstep"><div class="pdot pdot-done">✓</div><span class="plbl">Scan pill bottle</span></div><div class="pstep"><div class="pdot pdot-cur">2</div><span class="plbl plbl-cur">Confirm details</span></div><div class="pstep"><div class="pdot pdot-todo"></div><span class="plbl">Set reminder</span></div><div style="background:rgba(29,78,216,.1);border:2px dashed rgba(29,78,216,.4);border-radius:10px;height:90px;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:.5rem 0;cursor:pointer" onclick="protoNext()"><div style="font-size:1.4rem">📷</div><div style="font-size:.52rem;color:#93C5FD;margin-top:.2rem">Tap to scan label</div></div><div style="font-size:.5rem;color:rgba(255,255,255,.3);text-align:center;margin-bottom:.4rem">— or enter manually —</div><div class="pinp" style="background:rgba(21,128,61,.1);border-color:rgba(21,128,61,.4)">💊 Lisinopril 10mg ✓ <span style="color:#86EFAC;font-size:.48rem">OCR detected</span></div><div class="pinp">Dose: 10 mg</div><div class="pinp">Frequency: Once daily</div><div class="pbtn pbtn-b" onclick="protoNext()">Confirm Details →</div></div>';} },
+          { id:'a4', label:'Set Reminder', tab:1,
+            html: function(){return '<div class="ps active" id="s-a4" style="padding:.8rem"><div class="psh">Set Reminder</div><div class="pstep"><div class="pdot pdot-done">✓</div><span class="plbl">Scan pill bottle</span></div><div class="pstep"><div class="pdot pdot-done">✓</div><span class="plbl">Confirm details</span></div><div class="pstep"><div class="pdot pdot-cur">3</div><span class="plbl plbl-cur">Set reminder</span></div><div style="margin-top:.5rem"><div style="font-size:.52rem;color:rgba(255,255,255,.4);margin-bottom:.3rem">Reminder time</div><div style="display:flex;gap:.5rem;margin-bottom:.4rem"><div class="prow" style="flex:1;text-align:center;background:rgba(29,78,216,.25);border-color:#3B82F6" onclick="protoNext()"><div class="prow-label">🌅 8:00 AM</div><div class="prow-sub">Morning</div></div><div class="prow" style="flex:1;text-align:center" onclick="protoNext()"><div class="prow-label">🌙 8:00 PM</div><div class="prow-sub">Evening</div></div></div><div style="font-size:.52rem;color:rgba(255,255,255,.4);margin-bottom:.3rem">Alert type</div><div class="prow" style="background:rgba(21,128,61,.15);border-color:rgba(21,128,61,.3)"><div class="prow-label">🔔 Push notification + vibration</div></div><div class="pbtn pbtn-g" style="margin-top:.5rem" onclick="protoNext()">✓ Save Reminder</div></div></div>';} },
+          { id:'a5', label:'Home Dashboard', tab:0,
+            html: function(){return '<div class="ps active" id="s-a5" style="padding:.75rem"><div style="font-size:.52rem;color:rgba(255,255,255,.38)">Good morning,</div><div class="psh" style="margin-bottom:.2rem">Margaret 👋</div><div style="background:rgba(29,78,216,.3);border:1px solid rgba(96,165,250,.25);border-radius:6px;padding:.28rem .55rem;font-size:.52rem;color:#93C5FD;margin-bottom:.55rem;display:flex;align-items:center;gap:.3rem">🔥 1-day streak — keep it up!</div><div style="font-size:.48rem;color:rgba(255,255,255,.3);margin-bottom:.2rem">TODAY</div><div class="prow"><div style="display:flex;justify-content:space-between;align-items:center"><div><div class="prow-label">💊 Lisinopril 10mg</div><div class="prow-sub">8:00 AM · Not yet taken</div></div><div class="pbtn pbtn-b" style="margin:0;padding:.2rem .5rem;font-size:.5rem" onclick="protoNext()">TAKE</div></div></div><div style="background:rgba(15,118,110,.15);border:1px solid rgba(15,118,110,.3);border-radius:6px;padding:.3rem .55rem;font-size:.52rem;color:#5EEAD4;margin-top:.35rem">📅 Dr. Chen — Thu Feb 27 · 10:00 AM</div></div>';} },
+        ]
+      },
+      B: {
+        desc: 'Margaret receives a morning reminder and confirms her Lisinopril as taken, then sees a green confirmation screen.',
+        nav: ['🏠','💊','📅','💬','📊'],
+        activeTab: [1,1,0,0,0],
+        screens: [
+          { id:'b1', label:'Notification', tab:null,
+            html: function(){return '<div class="ps active" id="s-b1" style="padding:.75rem"><div class="psh" style="font-size:.82rem">Home</div><div style="background:rgba(29,78,216,.15);border:1px solid rgba(29,78,216,.35);border-radius:9px;padding:.65rem .75rem;margin:.4rem 0;cursor:pointer" onclick="protoNext()"><div style="display:flex;align-items:center;gap:.4rem;margin-bottom:.25rem"><span style="font-size:.9rem">🔔</span><span style="font-size:.55rem;color:#93C5FD;font-weight:600">Medication Reminder</span><span style="font-size:.46rem;color:rgba(255,255,255,.3);margin-left:auto">now</span></div><div style="font-size:.58rem;color:#fff">Time to take Lisinopril 10mg</div><div style="font-size:.5rem;color:rgba(255,255,255,.38)">Tap to open →</div></div><div class="prow"><div class="prow-label">💊 Lisinopril 10mg</div><div class="prow-sub">8:00 AM · Pending</div></div><div class="prow"><div class="prow-label">💊 Metformin 500mg</div><div class="prow-sub">8:00 PM · Upcoming</div></div></div>';} },
+          { id:'b2', label:'Reminder Screen', tab:1,
+            html: function(){return '<div class="ps active" id="s-b2" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;padding:1rem"><div style="font-size:2.4rem;margin-bottom:.4rem">💊</div><div class="psh">Lisinopril</div><div style="font-size:.54rem;color:rgba(255,255,255,.4);margin-bottom:.7rem">10 mg · Morning dose</div><div style="font-family:var(--mono);font-size:1.3rem;color:#60A5FA;margin-bottom:.9rem;font-weight:500">8:00 AM</div><div class="pbtn pbtn-g" onclick="protoNext()">✓ TAKEN</div><div class="pbtn pbtn-s" onclick="protoNext()">⏰ Remind me in 30 min</div><div class="pbtn pbtn-k" onclick="protoNext()">Skip this dose</div></div>';} },
+          { id:'b3', label:'Confirmation', tab:1,
+            html: function(){return '<div class="ps active" id="s-b3" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;padding:1rem;background:rgba(21,128,61,.08)"><div style="width:54px;height:54px;background:#15803D;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin-bottom:.7rem;animation:pop .3s ease">✓</div><div class="psh">Dose Recorded!</div><div style="font-size:.56rem;color:rgba(255,255,255,.5);margin-bottom:.3rem">Lisinopril 10mg marked as taken</div><div style="font-size:.5rem;color:rgba(255,255,255,.3);margin-bottom:1.2rem">8:04 AM · Feb 21, 2026</div><div style="background:rgba(21,128,61,.2);border:1px solid rgba(21,128,61,.35);border-radius:7px;padding:.4rem .6rem;font-size:.52rem;color:#86EFAC;margin-bottom:.7rem">🔥 12-day streak!</div><div class="pbtn pbtn-b" style="width:100%" onclick="protoNext()">Back to Home</div></div><style>@keyframes pop{0%{transform:scale(0)}80%{transform:scale(1.15)}100%{transform:scale(1)}}</style>';} },
+          { id:'b4', label:'Updated Home', tab:0,
+            html: function(){return '<div class="ps active" id="s-b4" style="padding:.75rem"><div style="font-size:.52rem;color:rgba(255,255,255,.38)">Good morning,</div><div class="psh" style="margin-bottom:.2rem">Margaret 👋</div><div style="background:rgba(29,78,216,.3);border:1px solid rgba(96,165,250,.25);border-radius:6px;padding:.28rem .55rem;font-size:.52rem;color:#93C5FD;margin-bottom:.55rem">🔥 12-day streak!</div><div style="font-size:.48rem;color:rgba(255,255,255,.3);margin-bottom:.2rem">TODAY</div><div class="prow" style="background:rgba(21,128,61,.1);border-color:rgba(21,128,61,.3)"><div style="display:flex;justify-content:space-between;align-items:center"><div><div class="prow-label">💊 Lisinopril 10mg</div><div class="prow-sub">8:00 AM · ✓ Taken</div></div><div style="background:#15803D;color:#fff;font-size:.48rem;padding:.15rem .45rem;border-radius:4px">✓ DONE</div></div></div><div class="prow"><div style="display:flex;justify-content:space-between;align-items:center"><div><div class="prow-label">💊 Metformin 500mg</div><div class="prow-sub">8:00 PM · Upcoming</div></div><div class="pbtn pbtn-b" style="margin:0;padding:.2rem .5rem;font-size:.5rem">TAKE</div></div></div></div>';} },
+        ]
+      },
+      C: {
+        desc: 'David lands in a new timezone. The app detects it and prompts him to adjust his medication reminders automatically.',
+        nav: ['🏠','💊','📅','💬','📊'],
+        activeTab: [1,0,0,0,0],
+        screens: [
+          { id:'c1', label:'Home (Travelling)', tab:0,
+            html: function(){return '<div class="ps active" id="s-c1" style="padding:.75rem"><div style="font-size:.52rem;color:rgba(255,255,255,.38)">Good morning,</div><div class="psh" style="margin-bottom:.35rem">David 👋</div><div class="prow"><div class="prow-label">💊 Lisinopril 10mg</div><div class="prow-sub">8:00 AM · Upcoming</div></div><div class="prow"><div class="prow-label">💊 Atorvastatin 20mg</div><div class="prow-sub">9:00 PM · Upcoming</div></div><div style="background:rgba(180,83,9,.15);border:1px solid rgba(180,83,9,.4);border-radius:7px;padding:.45rem .6rem;margin-top:.4rem;cursor:pointer" onclick="protoNext()"><div style="font-size:.56rem;color:#FCD34D;font-weight:600;margin-bottom:.15rem">✈️ Travel Mode Detected</div><div style="font-size:.5rem;color:rgba(255,255,255,.5)">You\'re now in PST (UTC−8). Tap to adjust reminders.</div></div></div>';} },
+          { id:'c2', label:'Timezone Prompt', tab:0,
+            html: function(){return '<div class="ps active" id="s-c2" style="padding:.8rem"><div class="psh">Adjust for Travel?</div><div style="font-size:.54rem;color:rgba(255,255,255,.4);margin-bottom:.7rem;line-height:1.5">You\'ve moved from <strong style="color:#fff">EST (UTC−5)</strong> to <strong style="color:#fff">PST (UTC−8)</strong>. Should MedCompanion shift your reminders?</div><div style="display:flex;flex-direction:column;gap:.3rem;margin-bottom:.6rem"><div class="prow" style="background:rgba(29,78,216,.2);border-color:#3B82F6;cursor:pointer" onclick="protoNext()"><div class="prow-label">⏰ Keep original EST times</div><div class="prow-sub">8:00 AM reminder fires at 5:00 AM PST</div></div><div class="prow" onclick="protoNext()"><div class="prow-label">🌍 Shift to local PST times</div><div class="prow-sub">Reminder stays at 8:00 AM in new timezone</div></div></div><div class="pbtn pbtn-b" onclick="protoNext()">✓ Shift to Local Time</div><div class="pbtn pbtn-s" onclick="protoNext()">Keep EST Schedule</div></div>';} },
+          { id:'c3', label:'Updated Schedule', tab:0,
+            html: function(){return '<div class="ps active" id="s-c3" style="padding:.75rem"><div class="psh" style="margin-bottom:.3rem">Schedule Updated</div><div style="background:rgba(21,128,61,.12);border:1px solid rgba(21,128,61,.3);border-radius:7px;padding:.4rem .6rem;font-size:.52rem;color:#86EFAC;margin-bottom:.5rem">✓ Reminders shifted to PST</div><div style="font-size:.48rem;color:rgba(255,255,255,.3);margin-bottom:.2rem">TODAY · PST</div><div class="prow"><div class="prow-label">💊 Lisinopril 10mg</div><div class="prow-sub">8:00 AM PST (was 11:00 AM EST)</div></div><div class="prow"><div class="prow-label">💊 Atorvastatin 20mg</div><div class="prow-sub">9:00 PM PST (was 12:00 AM EST)</div></div><div style="background:rgba(15,118,110,.1);border:1px solid rgba(15,118,110,.25);border-radius:6px;padding:.3rem .5rem;font-size:.5rem;color:#5EEAD4;margin-top:.3rem">🌍 Travel mode active · Returns to EST automatically on Mar 2</div></div>';} },
+        ]
+      },
+      D: {
+        desc: 'David books a follow-up telehealth appointment with his cardiologist through the Appointments tab.',
+        nav: ['🏠','💊','📅','💬','📊'],
+        activeTab: [0,0,1,0,0],
+        screens: [
+          { id:'d1', label:'Appointments Tab', tab:2,
+            html: function(){return '<div class="ps active" id="s-d1" style="padding:.75rem"><div class="psh">Appointments</div><div class="prow"><div style="display:flex;align-items:center;gap:.4rem"><span style="font-size:.9rem">🏥</span><div><div class="prow-label">Dr. Chen — Cardiology</div><div class="prow-sub">Thu Feb 27 · 10:00 AM · In-person</div></div></div></div><div class="prow"><div style="display:flex;align-items:center;gap:.4rem;justify-content:space-between"><div style="display:flex;align-items:center;gap:.4rem"><span style="font-size:.9rem">💻</span><div><div class="prow-label">Dr. Patel — GP</div><div class="prow-sub">Mon Mar 3 · 2:30 PM · Telehealth</div></div></div><div style="background:#0F766E;color:#fff;font-size:.46rem;padding:.12rem .4rem;border-radius:100px">Join</div></div></div><div class="pbtn pbtn-b" style="margin-top:.4rem;text-align:center" onclick="protoNext()">+ Add Appointment</div></div>';} },
+          { id:'d2', label:'Select Provider', tab:2,
+            html: function(){return '<div class="ps active" id="s-d2" style="padding:.8rem"><div class="psh">Book Appointment</div><div class="psub">Step 1 — Select provider</div><div class="prow" style="background:rgba(29,78,216,.2);border-color:#3B82F6;cursor:pointer" onclick="protoNext()"><div class="prow-label">🫀 Dr. Chen — Cardiology</div><div class="prow-sub">MUHC · Next available: Feb 27</div></div><div class="prow" onclick="protoNext()"><div class="prow-label">🩺 Dr. Patel — General Practice</div><div class="prow-sub">Côte-des-Neiges · Next: Mar 3</div></div><div class="prow" onclick="protoNext()"><div class="prow-label">💊 Dr. Roy — Endocrinology</div><div class="prow-sub">Jewish General · Next: Mar 10</div></div></div>';} },
+          { id:'d3', label:'Select Date & Type', tab:2,
+            html: function(){return '<div class="ps active" id="s-d3" style="padding:.8rem"><div class="psh">Dr. Chen</div><div class="psub">Step 2 — Date &amp; type</div><div style="font-size:.52rem;color:rgba(255,255,255,.4);margin-bottom:.25rem">Visit type</div><div style="display:flex;gap:.35rem;margin-bottom:.5rem"><div class="prow" style="flex:1;text-align:center;background:rgba(29,78,216,.2);border-color:#3B82F6" onclick="protoNext()"><div class="prow-label">💻 Telehealth</div></div><div class="prow" style="flex:1;text-align:center" onclick="protoNext()"><div class="prow-label">🏥 In-person</div></div></div><div style="font-size:.52rem;color:rgba(255,255,255,.4);margin-bottom:.25rem">Available slots</div><div class="prow" style="background:rgba(29,78,216,.2);border-color:#3B82F6;cursor:pointer" onclick="protoNext()"><div class="prow-label">Tue Mar 4 · 10:00 AM</div><div class="prow-sub">Telehealth · 30 min</div></div><div class="prow" onclick="protoNext()"><div class="prow-label">Wed Mar 5 · 2:00 PM</div><div class="prow-sub">Telehealth · 30 min</div></div><div class="pbtn pbtn-b" style="margin-top:.4rem" onclick="protoNext()">Continue →</div></div>';} },
+          { id:'d4', label:'Confirm Booking', tab:2,
+            html: function(){return '<div class="ps active" id="s-d4" style="padding:.8rem"><div class="psh">Confirm Booking</div><div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:9px;padding:.65rem .75rem;margin:.4rem 0"><div style="font-size:.52rem;color:rgba(255,255,255,.38);margin-bottom:.15rem">APPOINTMENT SUMMARY</div><div style="font-size:.6rem;color:#fff;margin-bottom:.12rem">🫀 Dr. Chen — Cardiology</div><div style="font-size:.54rem;color:rgba(255,255,255,.5);margin-bottom:.08rem">Tue Mar 4 · 10:00 AM · Telehealth</div><div style="font-size:.54rem;color:rgba(255,255,255,.5)">📍 MUHC Royal Victoria Hospital</div></div><div class="pbtn pbtn-g" onclick="protoNext()">✓ Confirm Appointment</div><div class="pbtn pbtn-s" onclick="protoBack()">← Edit</div></div>';} },
+          { id:'d5', label:'Booked!', tab:2,
+            html: function(){return '<div class="ps active" id="s-d5" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;padding:1rem"><div style="width:50px;height:50px;background:#15803D;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:.6rem">✓</div><div class="psh">Appointment Booked!</div><div style="font-size:.54rem;color:rgba(255,255,255,.4);margin-bottom:.25rem">Dr. Chen · Tue Mar 4 · 10:00 AM</div><div style="font-size:.5rem;color:rgba(255,255,255,.3);margin-bottom:1rem">Reminders set: 24h before &amp; 1h before</div><div class="pbtn pbtn-b" style="width:100%" onclick="protoNext()">View Appointments</div></div>';} },
+        ]
+      },
+      E: {
+        desc: 'Margaret sends a secure message to her doctor about a side effect she noticed, and receives a delivery confirmation.',
+        nav: ['🏠','💊','📅','💬','📊'],
+        activeTab: [0,0,0,1,0],
+        screens: [
+          { id:'e1', label:'Messages Tab', tab:3,
+            html: function(){return '<div class="ps active" id="s-e1" style="padding:.75rem"><div class="psh">Messages</div><div class="prow" style="cursor:pointer" onclick="protoNext()"><div style="display:flex;align-items:center;gap:.45rem"><div style="width:30px;height:30px;background:#0F766E;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;flex-shrink:0">C</div><div><div class="prow-label">Dr. Chen</div><div class="prow-sub">Last: "See you Thursday!" · 2d ago</div></div><div style="width:8px;height:8px;background:#1D4ED8;border-radius:50%;margin-left:auto;flex-shrink:0"></div></div></div><div class="prow"><div style="display:flex;align-items:center;gap:.45rem"><div style="width:30px;height:30px;background:#7C3AED;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;flex-shrink:0">P</div><div><div class="prow-label">Dr. Patel</div><div class="prow-sub">Last: "Refill ready." · 5d ago</div></div></div></div><div class="pbtn pbtn-b" style="margin-top:.4rem" onclick="protoNext()">+ New Message</div></div>';} },
+          { id:'e2', label:'Chat with Dr. Chen', tab:3,
+            html: function(){return '<div class="ps active" id="s-e2" style="padding:.6rem;display:flex;flex-direction:column;height:100%"><div style="display:flex;align-items:center;gap:.4rem;margin-bottom:.5rem"><div style="width:24px;height:24px;background:#0F766E;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.6rem;flex-shrink:0">C</div><div style="font-size:.58rem;color:#fff;font-weight:500">Dr. Chen — Cardiology</div></div><div style="flex:1;display:flex;flex-direction:column;gap:.35rem;overflow:hidden"><div style="background:rgba(255,255,255,.08);border-radius:7px 7px 7px 2px;padding:.35rem .5rem;max-width:80%;font-size:.52rem;color:rgba(255,255,255,.8)">Great appointment this week! Remember to check your BP daily. See you Thursday. — Dr. Chen</div><div style="background:rgba(29,78,216,.3);border-radius:7px 7px 2px 7px;padding:.35rem .5rem;max-width:80%;font-size:.52rem;color:#fff;align-self:flex-end">Thank you! I noticed some dizziness after my morning dose. Is that normal?</div></div><div style="display:flex;gap:.35rem;margin-top:.4rem" onclick="protoNext()"><div class="pinp" style="flex:1;margin:0;cursor:text">Type a message…</div><div style="background:#1D4ED8;border-radius:5px;padding:.3rem .5rem;font-size:.7rem;cursor:pointer" onclick="protoNext()">➤</div></div></div>';} },
+          { id:'e3', label:'Composing', tab:3,
+            html: function(){return '<div class="ps active" id="s-e3" style="padding:.6rem;display:flex;flex-direction:column;height:100%"><div style="display:flex;align-items:center;gap:.4rem;margin-bottom:.5rem"><div style="width:24px;height:24px;background:#0F766E;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.6rem;flex-shrink:0">C</div><div style="font-size:.58rem;color:#fff;font-weight:500">Dr. Chen — Cardiology</div></div><div style="flex:1;display:flex;flex-direction:column;gap:.35rem;overflow:hidden"><div style="background:rgba(255,255,255,.08);border-radius:7px 7px 7px 2px;padding:.35rem .5rem;max-width:80%;font-size:.52rem;color:rgba(255,255,255,.8)">Great appointment this week! See you Thursday.</div><div style="background:rgba(29,78,216,.3);border-radius:7px 7px 2px 7px;padding:.35rem .5rem;max-width:80%;font-size:.52rem;color:#fff;align-self:flex-end">Thank you! I noticed dizziness after morning dose. Is that normal?</div></div><div style="display:flex;gap:.35rem;margin-top:.4rem"><div class="pinp" style="flex:1;margin:0;background:rgba(29,78,216,.15);border-color:#3B82F6;color:#fff">Hi Dr. Chen, I feel dizzy after Lisinopril. Should I be concerned? 🩺</div><div class="pbtn pbtn-b" style="margin:0;padding:.3rem .5rem;font-size:.7rem" onclick="protoNext()">➤</div></div></div>';} },
+          { id:'e4', label:'Message Sent', tab:3,
+            html: function(){return '<div class="ps active" id="s-e4" style="padding:.6rem;display:flex;flex-direction:column;height:100%"><div style="display:flex;align-items:center;gap:.4rem;margin-bottom:.5rem"><div style="width:24px;height:24px;background:#0F766E;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.6rem;flex-shrink:0">C</div><div style="font-size:.58rem;color:#fff;font-weight:500">Dr. Chen — Cardiology</div></div><div style="flex:1;display:flex;flex-direction:column;gap:.35rem"><div style="background:rgba(255,255,255,.08);border-radius:7px 7px 7px 2px;padding:.35rem .5rem;max-width:80%;font-size:.52rem;color:rgba(255,255,255,.8)">Great appointment! See you Thursday.</div><div style="background:rgba(29,78,216,.3);border-radius:7px 7px 2px 7px;padding:.35rem .5rem;max-width:80%;font-size:.52rem;color:#fff;align-self:flex-end">Thank you! I noticed dizziness after morning dose. Is that normal?</div><div style="background:rgba(29,78,216,.3);border-radius:7px 7px 2px 7px;padding:.35rem .5rem;max-width:80%;font-size:.52rem;color:#fff;align-self:flex-end">Hi Dr. Chen, I feel dizzy after Lisinopril. Should I be concerned? 🩺<div style="font-size:.44rem;color:rgba(255,255,255,.4);margin-top:.15rem;text-align:right">✓✓ Delivered · 9:47 AM</div></div></div><div style="background:rgba(21,128,61,.12);border:1px solid rgba(21,128,61,.3);border-radius:6px;padding:.3rem .5rem;font-size:.5rem;color:#86EFAC;margin-top:.3rem">📩 Message delivered securely · Dr. Chen typically replies within 24h</div></div>';} },
+        ]
+      }
+    };
+
+    var state = { flow: 'A', idx: 0 };
+
+    function buildNav(flowKey) {
+      var f = FLOWS[flowKey];
+      var nav = document.getElementById('proto-nav');
+      var labels = ['Home','Meds','Appts','Chat','Reports'];
+      nav.innerHTML = f.nav.map(function(ico, i){
+        return '<div class="ptab'+(f.activeTab[i]?' on':'')+'" onclick="navTap('+i+')"><span class="ptab-ico">'+ico+'</span>'+labels[i]+'</div>';
+      }).join('');
+    }
+
+    function navTap(i) {
+      // map tab index to a relevant flow
+      var tabFlows = {0:'A', 1:'A', 2:'D', 3:'E', 4:'B'};
+      if(tabFlows[i]) startFlow(tabFlows[i], document.querySelectorAll('.proto-flow-btn')[Object.keys(tabFlows).indexOf(String(i))]);
+    }
+
+    function buildCrumbs(flow, idx) {
+      var screens = FLOWS[flow].screens;
+      var c = document.getElementById('proto-crumb');
+      c.innerHTML = screens.map(function(s,i){
+        var cls = 'crumb'+(i<idx?' done':i===idx?' cur':'');
+        return '<div class="'+cls+'" title="'+s.label+'"></div>';
+      }).join('');
+    }
+
+    function showScreen(flow, idx, dir) {
+      var screens = FLOWS[flow].screens;
+      if(idx < 0 || idx >= screens.length) return;
+      var container = document.getElementById('proto-screen');
+      // remove old
+      var old = container.querySelector('.ps.active');
+      if(old) { old.classList.add('out'); setTimeout(function(){ if(old.parentNode) old.parentNode.removeChild(old); }, 260); }
+      // add new
+      var tmp = document.createElement('div');
+      tmp.innerHTML = screens[idx].html();
+      var el = tmp.firstChild;
+      el.style.transform = dir === 'back' ? 'translateX(-30px)' : 'translateX(30px)';
+      el.style.opacity = '0';
+      container.appendChild(el);
+      requestAnimationFrame(function(){
+        requestAnimationFrame(function(){
+          el.style.transition = 'opacity .25s, transform .25s';
+          el.style.transform = 'none';
+          el.style.opacity = '1';
+        });
+      });
+      document.getElementById('screen-lbl').textContent = screens[idx].label;
+      buildCrumbs(flow, idx);
+      // update time
+      var times = ['9:41','9:45','9:48','9:52','10:00','10:05','10:12','10:30','11:15'];
+      document.getElementById('ps-time').textContent = times[idx] || '9:41';
+      // btn states
+      document.getElementById('btn-back').style.opacity = idx === 0 ? '.35' : '1';
+      document.getElementById('btn-next').style.opacity = idx === screens.length-1 ? '.35' : '1';
+      document.getElementById('btn-next').textContent = idx === screens.length-1 ? 'Done ✓' : 'Next →';
+    }
+
+    function startFlow(key, btn) {
+      state.flow = key; state.idx = 0;
+      document.querySelectorAll('.proto-flow-btn').forEach(function(b){ b.classList.remove('active'); });
+      if(btn) btn.classList.add('active');
+      document.getElementById('flow-desc').textContent = FLOWS[key].desc;
+      buildNav(key);
+      showScreen(key, 0, 'next');
+    }
+
+    function protoNext() {
+      var screens = FLOWS[state.flow].screens;
+      if(state.idx < screens.length - 1) { state.idx++; showScreen(state.flow, state.idx, 'next'); }
+    }
+    function protoBack() {
+      if(state.idx > 0) { state.idx--; showScreen(state.flow, state.idx, 'back'); }
+    }
+    function protoReset() { startFlow(state.flow, document.querySelector('.proto-flow-btn.active')); }
+
+    // init
+    document.addEventListener('DOMContentLoaded', function(){
+      startFlow('A', document.querySelector('.proto-flow-btn.active'));
+    });
+    // also run immediately in case DOM is ready
+    if(document.readyState !== 'loading') {
+      startFlow('A', document.querySelector('.proto-flow-btn.active'));
+    }
+    </script>
+  </div>
+</section>
+
+<section class="section" id="testing">
+  <div class="container">
+    <h2 class="section-title">Usability Testing Plan</h2>
+
+    <h3 class="sub-title">7.1 Goals</h3>
+    <div class="prose">
+      <p>The usability test aims to answer four questions: (1) Can users complete core medication tasks without assistance? (2) Where do errors and confusion occur? (3) How trustworthy and easy to use do participants perceive the app? (4) What is the System Usability Scale (SUS) score for the prototype?</p>
+    </div>
+
+    <h3 class="sub-title">7.2 Participants</h3>
+    <div class="prose">
+      <p>Nielsen's finding that five users reveal approximately 85% of usability issues informs the target recruitment of six to eight participants [13]:</p>
+    </div>
+    <ul class="find-list">
+      <li><span class="icon">👩‍🦳</span><div>3&ndash;4 participants aged 60+ with at least one chronic condition and limited mHealth experience (Margaret archetype)</div></li>
+      <li><span class="icon">👨🏾‍💼</span><div>2&ndash;3 participants aged 35&ndash;55 with a chronic condition and high technology comfort (David archetype)</div></li>
+      <li><span class="icon">📱</span><div>All must own a smartphone and must not have previously seen the prototype</div></li>
+    </ul>
+
+    <h3 class="sub-title">7.3 Tasks</h3>
+    <div style="overflow-x:auto;margin:1rem 0">
+      <table class="ux-tbl">
+        <thead><tr><th>Task</th><th>Scenario Given to Participant</th><th>Metrics</th><th>Success Criterion</th></tr></thead>
+        <tbody>
+          <tr><td>T1</td><td>You have been prescribed Metformin 500 mg twice daily. Add it to the app.</td><td>Time on task; error count</td><td>Completed in &lt;2 min without errors</td></tr>
+          <tr><td>T2</td><td>You received a reminder. Mark your 8am Lisinopril as taken.</td><td>Taps required; completion rate</td><td>Completed in &lt;30 seconds</td></tr>
+          <tr><td>T3</td><td>Book a follow-up with Dr. Smith for next Tuesday at 10am.</td><td>Time on task; satisfaction (5-pt Likert)</td><td>Completed without backtracking</td></tr>
+          <tr><td>T4</td><td>Send Dr. Smith a message about a side effect you noticed.</td><td>Error rate; task completion</td><td>Message sent successfully</td></tr>
+          <tr><td>T5</td><td>Find your Metformin adherence history for the past 30 days.</td><td>Navigation path; time to screen</td><td>Correct screen in &le;3 taps</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="sub-title">7.4 Method and Analysis</h3>
+    <div class="prose">
+      <p>Each session runs 45&ndash;60 minutes and is conducted remotely via screenshare or in person. The think-aloud protocol is used throughout: participants verbalise their reasoning as they navigate. After all tasks, participants complete the 10-item SUS questionnaire. The approach follows best practices identified in a 2025 systematic review of usability testing in 68 mHealth studies [13].</p>
+      <p>Qualitative observations are grouped thematically using affinity diagramming (e.g., "navigation confusion," "notification preference," "text size concerns"). Issues are prioritised by a severity-frequency matrix; the most blocking and most frequently encountered problems are addressed first in the next design iteration.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="reflection">
+  <div class="container">
+    <h2 class="section-title">Reflection</h2>
+    <div class="prose">
+      <p>The use of published literature &mdash; especially research conducted in Canada &mdash; for grounding design decisions helped to differentiate features that add value for users and those that can be added easily but are unlikely to be used. For example, the travel-mode time zone adjustment became a core feature rather than a secondary feature since research shows routine disruption is one of the primary reasons that users miss taking their medications [9].</p>
+      <p>The single most important issue regarding design was trying to meet the needs of two different types of users who have different, and sometimes conflicting, requirements for an application. For instance, what provides the least friction for Margaret (i.e., guided flows, large objects, minimal choices) may be perceived by David as being too limiting (i.e., David wants analytics, speed, as well as configurability). One method of resolving this issue was through progressive disclosure; for example, while the home screen is intentionally kept minimalistic, users who are more experienced can access more advanced features (i.e., analytics, calendar sync, telehealth) at any time, but they are not visually or functionally forced on the less-experienced user.</p>
+      <p>Finally, the journey maps helped us to identify emotional pain points that might not be obvious based on adherence data alone; for instance, adding an expected time to respond to a message in the user interface was implemented due to Margaret's anxiety regarding how long it would take for her to receive a response from her doctor.</p>
+      <p>Because this method develops a persona based on population level research data collected from a wide variety of different types of individual interviews with real live users, you cannot test how users interact with the product in person through a traditional usability test where only five- to eight people participate. The purpose of the next phase of this study is to create a caregiver-facing view; one of the biggest predictors of older adults' adherence is whether their family members are involved in their health care. You also need to create separate logging modules for use with patients who have diabetes, high blood pressure, etc.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="references">
+  <div class="container">
+    <h2 class="section-title">Sources</h2>
+    <ul class="ref-list">
+      <li><span class="ref-num">[1]</span><div>Think Research Canada, "Improving Medication Non-Adherence," Think Research, Mar. 2022. [Online]. Available: <a href="https://www.thinkresearch.com/ca/2022/03/08/improving-medication-non-adherence/" target="_blank">thinkresearch.com</a></div></li>
+      <li><span class="ref-num">[2]</span><div>S. Campbell et al., "Predictors of cost-related medication nonadherence in Canada: a repeated cross-sectional analysis of the Canadian Community Health Survey," <em>CMAJ</em>, vol. 196, no. 40, pp. E1331&ndash;E1340, Nov. 2024. doi: <a href="https://doi.org/10.1503/cmaj.240747" target="_blank">10.1503/cmaj.240747</a></div></li>
+      <li><span class="ref-num">[3]</span><div>M. Jaana, H. Sherrard, and G. Par&eacute;, "Comparison of Mobile Health Technology Use for Self-Tracking Between Older Adults and the General Adult Population in Canada: Cross-Sectional Survey," <em>JMIR mHealth and uHealth</em>, vol. 8, no. 11, e24718, Nov. 2020. doi: <a href="https://doi.org/10.2196/24718" target="_blank">10.2196/24718</a></div></li>
+      <li><span class="ref-num">[4]</span><div>J. Hlinovska et al., "Patients' UX Impact on Medication Adherence in Czech Pilot Study for Chronically Ill," <em>Int. J. Environ. Res. Public Health</em>, 2024. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11200957/" target="_blank">PMC11200957</a>. doi: <a href="https://doi.org/10.3390/ijerph21060726" target="_blank">10.3390/ijerph21060726</a></div></li>
+      <li><span class="ref-num">[5]</span><div>A. Sproul, J. Stevens, and J. Richard, "Older Adults' Use of and Interest in Technology and Applications for Health Management: A Survey Study," <em>Can. J. Hosp. Pharm.</em>, vol. 76, no. 3, pp. 209&ndash;215, Jul. 2023. doi: <a href="https://doi.org/10.4212/cjhp.3261" target="_blank">10.4212/cjhp.3261</a></div></li>
+      <li><span class="ref-num">[6]</span><div>A. G. Singer, L. LaBine, A. Katz, M. Yogendran, and L. Lix, "Primary medication nonadherence in a large primary care population," <em>Can. Fam. Physician</em>, vol. 68, no. 7, pp. 520&ndash;527, Jul. 2022. doi: <a href="https://doi.org/10.46747/cfp.6807520" target="_blank">10.46747/cfp.6807520</a></div></li>
+      <li><span class="ref-num">[7]</span><div>D. A. Hennessy et al., "Out-of-pocket spending on drugs and pharmaceutical products and cost-related prescription non-adherence among Canadians with chronic disease," <em>Health Reports</em> (Statistics Canada), vol. 27, no. 6, Jun. 2016. <a href="https://www150.statcan.gc.ca/n1/pub/82-003-x/2016006/article/14634-eng.htm" target="_blank">statcan.gc.ca</a></div></li>
+      <li><span class="ref-num">[8]</span><div>C. E. Dillon, J. V. Byrne, and B. J. Manns, "Cost-related medication nonadherence in Canada: a systematic review of prevalence, predictors, and clinical impact," <em>Systematic Reviews</em>, vol. 10, no. 5, Jan. 2021. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7788798/" target="_blank">PMC7788798</a>. doi: <a href="https://doi.org/10.1186/s13643-020-01558-5" target="_blank">10.1186/s13643-020-01558-5</a></div></li>
+      <li><span class="ref-num">[9]</span><div>C. Liu et al., "Exploring medication self-management in polypharmacy: a qualitative systematic review," <em>Frontiers in Pharmacology</em>, vol. 15, 2024. doi: <a href="https://doi.org/10.3389/fphar.2024.1426777" target="_blank">10.3389/fphar.2024.1426777</a></div></li>
+      <li><span class="ref-num">[10]</span><div>M. Ethier et al., "eHealth and the Digital Divide Among Older Canadians: Insights from a National Cross-Sectional Study," <em>J. Med. Internet Res.</em>, 2025. PMID: 41289575. doi: <a href="https://doi.org/10.2196/63049" target="_blank">10.2196/63049</a></div></li>
+      <li><span class="ref-num">[11]</span><div>Z. Nimmanterdwong et al., "Design Guidelines of Mobile Apps for Older Adults: Systematic Review and Thematic Analysis," <em>JMIR mHealth and uHealth</em>, e43186, 2023. doi: <a href="https://doi.org/10.2196/43186" target="_blank">10.2196/43186</a></div></li>
+      <li><span class="ref-num">[12]</span><div>A. Simatele et al., "Impact of the COVID-19 Pandemic on Adherence to Most Costly Chronic Disease Medications in British Columbia, Canada," <em>Patient Prefer. Adherence</em>, 2024. doi: <a href="https://doi.org/10.2147/PPA.S529666" target="_blank">10.2147/PPA.S529666</a></div></li>
+      <li><span class="ref-num">[13]</span><div>Z. Galavi et al., "A systematic review of user-based usability testing practices in self-care mHealth apps," <em>npj Digit. Med.</em>, 2025. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12397588/" target="_blank">PMC12397588</a>. doi: <a href="https://doi.org/10.1038/s41746-025-01592-y" target="_blank">10.1038/s41746-025-01592-y</a></div></li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <strong>MedCompanion &mdash; UX/UI Case Study</strong><br/>
+  SOEN357 Mini Project &middot; Winter 2026 &middot; Concordia University
+</footer>
+
+<script>
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible')})},{threshold:.1,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el)});
+
+
+var secs=document.querySelectorAll('section[id]');
+var nls=document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll',function(){
+  var cur='';
+  secs.forEach(function(s){if(window.scrollY>=s.offsetTop-70)cur=s.id});
+  nls.forEach(function(a){a.classList.toggle('active',a.getAttribute('href')==='#'+cur)});
+});
+
+// Smooth scroll with offset for sticky nav
+document.querySelectorAll('.nav-links a[href^="#"]').forEach(function(link){
+  link.addEventListener('click',function(e){
+    var target=document.querySelector(this.getAttribute('href'));
+    if(target){
+      e.preventDefault();
+      var offset=target.getBoundingClientRect().top+window.scrollY-62;
+      window.scrollTo({top:offset,behavior:'smooth'});
+    }
+  });
+});
+</script>
+</body>
+</html>
